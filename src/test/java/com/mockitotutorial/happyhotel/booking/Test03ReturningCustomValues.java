@@ -1,12 +1,15 @@
 package com.mockitotutorial.happyhotel.booking;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-public class Test02DefaultReturnValue {
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+public class Test03ReturningCustomValues {
 
     private BookingService bookingService;
     private PaymentService paymentServiceMock;
@@ -29,13 +32,30 @@ public class Test02DefaultReturnValue {
     }
 
     @Test
-    void should_CountAvailablePlaces() {
+    void should_CountAvailablePlaces_When_OneRoomAvailable() {
         // given
-        int expected = 0;
+        when(this.roomServiceMock.getAvailableRooms()).thenReturn(Collections.singletonList(new Room("Room 1", 5)));
+        int expected = 5;
+
         // when
         int actual = bookingService.getAvailablePlaceCount();
+
         // then
         assertEquals(expected, actual);
-
     }
+
+    @Test
+    void should_CountAvailablePlaces_When_MultiplesRoomsAvailable() {
+        // given
+        List<Room> rooms = Arrays.asList(new Room("Room 1", 8), new Room("Room 2", 5));
+        when(this.roomServiceMock.getAvailableRooms()).thenReturn(rooms);
+        int expected = 13;
+
+        // when
+        int actual = bookingService.getAvailablePlaceCount();
+
+        // then
+        assertEquals(expected, actual);
+    }
+
 }
